@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# Check if Python is installed
+if ! command -v python &> /dev/null
+then
+    echo "Python is not installed. Please install Python first."
+    exit 1
+fi
+
+# Get the directory of the current script
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
+echo $SCRIPT_DIR
+
+# Set the directory for the virtual environment
+VENV_DIR="$SCRIPT_DIR/.env"
+
+# Check if the .env directory already exists
+if [ ! -d "$VENV_DIR" ]; then
+    # If not, create the virtual environment
+    echo "Creating a virtual environment at $VENV_DIR. This may take a few moments."
+    python -m venv "$VENV_DIR"
+    echo "Virtual environment created at $VENV_DIR."
+else
+    echo ".env directory already exists. Skipping virtual environment creation."
+fi
+
+# Activate the virtual environment
+source "$VENV_DIR/bin/activate"
+
+# Set the GIT_PROJ_DIR environment variable
+export GIT_PROJ_DIR=$SCRIPT_DIR
+echo "GIT_PROJ_DIR is set to $GIT_PROJ_DIR"
+
+# Install the current area as an editable package
+pip install -r requirements.txt
+pip install -e .
+echo "Completed."
