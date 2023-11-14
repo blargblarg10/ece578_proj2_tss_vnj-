@@ -45,7 +45,7 @@ for year, file_info in file_list.items():
             if line.startswith('#'):
                 continue
             elements = line.split('|')
-            ASes = elements[1].strip()
+            ASes = elements[2].strip()
             data[ASes] = data.get(ASes, 0) + 1
 
         data_per_year[year] = data
@@ -215,53 +215,5 @@ plt.ylabel("Number of AS")
 plt.title("AS Node Degree Distribution")
 plt.xticks(x_pos, x_label)
 
-plt.show()
-
-
-# ---------------------------------------------------------
-# ---------------------------------------------------------
-#
-# Graph 3 Data calculations
-#
-# ---------------------------------------------------------
-# ---------------------------------------------------------
-# Initialize the list for IP counts
-ip_counts = {}
-
-# Open the data file
-with open('/mnt/c/Users/Tyler Somers/Documents/ece578/ece578_proj2_tss_vnj/routeviews-rv6-20231105-1200.pfx2as.txt', 'r') as fp2:
-    for line in fp2:
-        elements = line.split()
-        mask = int(elements[1])
-        as_set = re.split(',|_', elements[2])
-        for a_s in as_set:
-            as_number = int(a_s)
-            if as_number < 500000:
-                ip_counts[as_number] = ip_counts.get(as_number, 0) + 2 ** (32 - mask)
-
-# Function to determine the logarithmic bin index
-def get_log_bin_index(ip_count):
-    if ip_count == 0:
-        return 0
-    return int(math.log10(ip_count))
-
-# Create a dictionary for logarithmic bin counts
-log_bin_counts = {}
-
-for count in ip_counts.values():
-    if count > 0:
-        bin_index = get_log_bin_index(count)
-        log_bin_counts[bin_index] = log_bin_counts.get(bin_index, 0) + 1
-
-# Prepare data for plotting
-bins = sorted(log_bin_counts.keys())
-counts = [log_bin_counts[bin_index] for bin_index in bins]
-
-# Plotting
-plt.bar(bins, counts, width=0.4, color='blue', align='center')
-plt.xlabel('Logarithmic Bin (10^x)')
-plt.ylabel('Number of ASes')
-plt.title('Histogram of IP Space Size Assigned to Each AS')
-plt.xticks(bins, [f"10^{i}" for i in bins])  # Set x-axis labels as 10^bin_index
 plt.show()
 pass

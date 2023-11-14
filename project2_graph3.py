@@ -41,8 +41,9 @@ counts = [log_bin_counts[bin_index] for bin_index in bins]
 
 # Plotting
 plt.bar(bins, counts, width=0.4, color='blue', align='center')
-plt.xlabel('Logarithmic Bin (10^x)')
+plt.xlabel('IP Space Size Assigned to Each AS (log10)')
 plt.ylabel('Number of ASes')
 plt.title('Histogram of IP Space Size Assigned to Each AS')
 plt.xticks(bins, [f"10^{i}" for i in bins])  # Set x-axis labels as 10^bin_index
 plt.show()
+pass
